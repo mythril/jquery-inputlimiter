@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Input Limiter Demo</title>
+	<link rel="stylesheet" type="text/css" href="jquery.inputlimiter.1.0.css" />
+	<script type="text/javascript" src="jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="jquery.inputlimiter.1.0.js"></script>
+	<style type="text/css">
+		body {
+			font-family: verdana;
+		}
+		#limitingtext {
+			color: #333;
+			font-size: 90%;
+		}
+	</style>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('textarea').inputlimiter();
+			$('#text1').inputlimiter({
+				limit: 50,
+				remText: 'You only have %n character%s remaining...',
+				limitText: 'You\'re allowed to input %n character%s into this field.'
+			});
+			$('#text2').inputlimiter({
+				limit: 50,
+				remText: '%n caractere%s restantes',
+				limitText: 'Campo limitado a %n caractere%s.'
+			});
+			$('#text3').inputlimiter({
+				limit: 30,
+				boxId: 'limitingtext',
+				boxAttach: false
+			});
+			
+		});
+	</script>
+</head>
+<body>
+<h1>jQuery Plugin: Input Limiter</h1>
+<form>
+	<fieldset>
+		<legend>Default Textareas</legend>
+		<label>This textarea will show the limiter info on two lines<br />
+		<textarea rows="3" cols="30" id="textarea1"></textarea></label><br />
+		
+		<label>Since this text area is wider it will show the limiter info on one line<br />
+		<textarea rows="5" cols="40" id="textarea2"></textarea></label><br />
+
+<strong>Code:</strong><br />
+<pre>$('textarea').inputlimiter();</pre>
+
+	</fieldset>
+	<fieldset>
+		<legend>Custom limiter text</legend>
+		<label>Make it more personal<br />
+		<input type="text" id="text1" size="50" /></label><br />
+
+<strong>Code:</strong><br />
+<pre>$('#text1').inputlimiter({
+	limit: 50,
+	remText: 'You only have %n character%s remaining...',
+	limitText: 'You\'re allowed to input %n character%s into this field.'
+});</pre>
+
+		<label>The limiter will display the text in Spanish<br />
+		<input type="text" id="text2" size="50" /></label><br />
+
+<strong>Code:</strong><br />
+<pre>$('#text2').inputlimiter({
+	limit: 50,
+	remText: '%n caractere%s restantes',
+	limitText: 'Campo limitado a %n caractere%s.'
+});</pre>
+
+	</fieldset>
+
+	<fieldset>
+		<legend>Alternate Box ID</legend>
+		<label>This input will display the limiter info in the existing span tag<br />
+		<input type="text" id="text3" size="30" /> <span id="limitingtext">Field limited to 30 characters.</span></label><br />
+
+<strong>Code:</strong><br />
+<pre>$('#text3').inputlimiter({
+	limit: 30,
+	boxId: 'limitingtext',
+	boxAttach: false
+});</pre>
+
+	</fieldset>
+</form>
+
+</body>
+</html>
