@@ -17,21 +17,75 @@
 	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			// Default
 			$('textarea').inputlimiter();
+			
+			// Make it more personal
 			$('#text1').inputlimiter({
 				limit: 50,
 				remText: 'You only have %n character%s remaining...',
 				limitText: 'You\'re allowed to input %n character%s into this field.'
 			});
+			
+			// The limiter will display the text in Spanish
 			$('#text2').inputlimiter({
 				limit: 50,
 				remText: '%n caractere%s restantes',
 				limitText: 'Campo limitado a %n caractere%s.'
 			});
+			
+			// This input will display the limiter info in the existing span tag
 			$('#text3').inputlimiter({
 				limit: 30,
 				boxId: 'limitingtext',
 				boxAttach: false
+			});
+
+			$('#text4').inputlimiter({
+				limit: 40,
+				remTextFilter: function (opts, charsRemaining) {
+					var charsTyped = opts.limit - charsRemaining;
+					return "You have typed " + charsTyped + " character" + ( charsTyped == 1?'':'s' ) + ".<br />" +
+						"You have " + charsRemaining + " character" + ( charsRemaining == 1?'':'s' ) + " remaining.";
+				},
+				limitTextFilter: function (opts) {
+					return "This field is limited to " + opts.limit + " character" + ( opts.limit == 1?'':'s' ) + ".";
+				}
+			});
+
+
+			// When your remaining characters drops below 13 the lyrics from The Twelve Days of Christmas will be displayed.
+			$('#text5').inputlimiter({
+				limit: 12,
+				remTextFilter: function (opts, charsRemaining) {
+					var remText = "The Twelve Days of Christmas";
+					if ( charsRemaining == 12 ) {
+						remText = "Twelve drummers druming.";
+					} else if ( charsRemaining == 11 ) {
+						remText = "Eleven pipers piping.";
+					} else if ( charsRemaining == 10 ) {
+						remText = "Ten lords a' leaping.";
+					} else if ( charsRemaining == 9 ) {
+						remText = "Nine ladies dancing.";
+					} else if ( charsRemaining == 8 ) {
+						remText = "Eight maids a' milking.";
+					} else if ( charsRemaining == 7 ) {
+						remText = "Seven swans a' swimming.";
+					} else if ( charsRemaining == 6 ) {
+						remText = "Six geese a' laying.";
+					} else if ( charsRemaining == 5 ) {
+						remText = "Five gold rings.";
+					} else if ( charsRemaining == 4 ) {
+						remText = "Four calling birds.";
+					} else if ( charsRemaining == 3 ) {
+						remText = "Three french hens.";
+					} else if ( charsRemaining == 2 ) {
+						remText = "Two turtle doves.";
+					} else if ( charsRemaining == 1 ) {
+						remText = "A partridge in a pear tree.";
+					}
+					return remText;
+				}
 			});
 			
 		});
@@ -89,6 +143,62 @@
 });</pre>
 
 	</fieldset>
+
+	<fieldset>
+		<legend>Custom Text Filters</legend>
+		<label>The remText and limitText have custom filters<br />
+		<input type="text" id="text4" size="40" /></label><br />
+<strong>Code:</strong><br />
+<pre>$('#text4').inputlimiter({
+	limit: 40,
+	remTextFilter: function (opts, charsRemaining) {
+		var charsTyped = opts.limit - charsRemaining;
+		return "You have typed " + charsTyped + " character" + ( charsTyped == 1?'':'s' ) + ".&lt;br /&gt;" +
+			"You have " + charsRemaining + " character" + ( charsRemaining == 1?'':'s' ) + " remaining.";
+	},
+	limitTextFilter: function (opts) {
+		return "This field is limited to " + opts.limit + " character" + ( opts.limit == 1?'':'s' ) + ".";
+	}
+});</pre>
+		<label>When your remaining characters drops below 13 the lyrics from The Twelve Days of Christmas will be displayed.<br />
+		<input type="text" id="text5" size="30" /></label><br />
+
+<strong>Code:</strong><br />
+<pre>$('#text5').inputlimiter({
+	limit: 12,
+	remTextFilter: function (opts, charsRemaining) {
+		var remText = "The Twelve Days of Christmas";
+		if ( charsRemaining == 12 ) {
+			remText = "Twelve drummers druming.";
+		} else if ( charsRemaining == 11 ) {
+			remText = "Eleven pipers piping.";
+		} else if ( charsRemaining == 10 ) {
+			remText = "Ten lords a' leaping.";
+		} else if ( charsRemaining == 9 ) {
+			remText = "Nine ladies dancing.";
+		} else if ( charsRemaining == 8 ) {
+			remText = "Eight maids a' milking.";
+		} else if ( charsRemaining == 7 ) {
+			remText = "Seven swans a' swimming.";
+		} else if ( charsRemaining == 6 ) {
+			remText = "Six geese a' laying.";
+		} else if ( charsRemaining == 5 ) {
+			remText = "Five gold rings.";
+		} else if ( charsRemaining == 4 ) {
+			remText = "Four calling birds.";
+		} else if ( charsRemaining == 3 ) {
+			remText = "Three french hens.";
+		} else if ( charsRemaining == 2 ) {
+			remText = "Two turtle doves.";
+		} else if ( charsRemaining == 1 ) {
+			remText = "A partridge in a pear tree.";
+		}
+		return remText;
+	}
+});</pre>
+
+	</fieldset>
+
 </form>
 
 </body>

@@ -2,7 +2,7 @@
  * jQuery Input Limiter plugin 1.0
  * http://rustyjeans.com/jquery-plugins/input-limiter/
  *
- * Copyright (c) 2009 Russel Fones
+ * Copyright (c) 2009 Russel Fones <russel@rustyjeans.com>
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -48,13 +48,10 @@
 						'top': ($(this).offset().top + $(this).outerHeight()) - 1 + 'px'
 					});
 				}
-				var remText = opts.remText;
-				remText = remText.replace(/\%n/g, opts.limit - $(this).val().length);
-				remText = remText.replace(/\%s/g, ( opts.limit - $(this).val().length == 1?'':'s' ));
+				var charsRemaining = opts.limit - $(this).val().length;
 
-				var limitText = opts.limitText;
-				limitText = limitText.replace(/\%n/g, opts.limit);
-				limitText = limitText.replace(/\%s/g, ( opts.limit == 1?'':'s' ));
+				var remText = opts.remTextFilter(opts, charsRemaining);
+				var limitText = opts.limitTextFilter(opts);
 
 				if ( opts.limitTextShow )
 				{
@@ -92,15 +89,31 @@
 		});
 	};
 
+	$.fn.inputlimiter.remtextfilter = function(opts, charsRemaining) {
+		var remText = opts.remText;
+		remText = remText.replace(/\%n/g, charsRemaining);
+		remText = remText.replace(/\%s/g, ( charsRemaining == 1?'':'s' ));
+		return remText;
+	};
+
+	$.fn.inputlimiter.limittextfilter = function(opts) {
+		var limitText = opts.limitText;
+		limitText = limitText.replace(/\%n/g, opts.limit);
+		limitText = limitText.replace(/\%s/g, ( opts.limit == 1?'':'s' ));
+		return limitText;
+	};
+
 	$.fn.inputlimiter.defaults = {
 		limit: 255,
 		boxAttach: true,
 		boxId: 'limiterBox',
 		boxClass: 'limiterBox',
 		remText: '%n character%s remaining.',
+		remTextFilter: $.fn.inputlimiter.remtextfilter,
 		remTextHideOnBlur: true,
 		limitTextShow: true,
-		limitText: 'Field limited to %n character%s.'
+		limitText: 'Field limited to %n character%s.',
+		limitTextFilter: $.fn.inputlimiter.limittextfilter
 	};
 
 })(jQuery);
