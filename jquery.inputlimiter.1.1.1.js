@@ -1,9 +1,9 @@
 /*
- * jQuery Input Limiter plugin 1.0
+ * jQuery Input Limiter plugin 1.1.1
  * http://rustyjeans.com/jquery-plugins/input-limiter/
  *
  * Copyright (c) 2009 Russel Fones <russel@rustyjeans.com>
- * 
+ *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
@@ -12,10 +12,10 @@
  * copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following
  * conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
  * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -45,7 +45,8 @@
 					$('#'+opts.boxId).css({
 						'width': $(this).outerWidth() - ($('#'+opts.boxId).outerWidth() - $('#'+opts.boxId).width()) + 'px',
 						'left': $(this).offset().left + 'px',
-						'top': ($(this).offset().top + $(this).outerHeight()) - 1 + 'px'
+						'top': ($(this).offset().top + $(this).outerHeight()) - 1 + 'px',
+						'z-index': 2000
 					});
 				}
 				var charsRemaining = opts.limit - $(this).val().length;
