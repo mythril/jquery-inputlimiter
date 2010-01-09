@@ -5,7 +5,7 @@
 	<title>Input Limiter Demo</title>
 	<link rel="stylesheet" type="text/css" href="jquery.inputlimiter.1.0.css" />
 	<script type="text/javascript" src="jquery-1.3.2.min.js"></script>
-	<script type="text/javascript" src="jquery.inputlimiter.1.1.1.min.js"></script>
+	<script type="text/javascript" src="jquery.inputlimiter.1.2.js"></script>
 	<style type="text/css">
 		body {
 			font-family: verdana;
@@ -24,16 +24,26 @@
 			$('#text1').inputlimiter({
 				limit: 50,
 				remText: 'You only have %n character%s remaining...',
+				remFullText: 'Stop typing! You\'re not allowed any more characters!',
 				limitText: 'You\'re allowed to input %n character%s into this field.'
+
 			});
 			
 			// The limiter will display the text in Spanish
 			$('#text2').inputlimiter({
 				limit: 50,
-				remText: '%n caractere%s restantes',
+				remText: '%n caractere%s restantes.',
 				limitText: 'Campo limitado a %n caractere%s.'
 			});
-			
+
+			// The limiter will display the text in French
+			$('#text2_1').inputlimiter({
+				limit: 50,
+				remText: '%n caract&egrave;re%s restants.',
+				limitText: 'Champ limit&eacute; &agrave; %n caract&egrave;re%s.',
+				zeroPlural: false
+			});
+
 			// This input will display the limiter info in the existing span tag
 			$('#text3').inputlimiter({
 				limit: 30,
@@ -115,6 +125,7 @@
 <pre>$('#text1').inputlimiter({
 	limit: 50,
 	remText: 'You only have %n character%s remaining...',
+	remFullText: 'Stop typing! You\'re not allowed any more characters!',
 	limitText: 'You\'re allowed to input %n character%s into this field.'
 });</pre>
 
@@ -124,8 +135,19 @@
 <strong>Code:</strong><br />
 <pre>$('#text2').inputlimiter({
 	limit: 50,
-	remText: '%n caractere%s restantes',
+	remText: '%n caractere%s restantes.',
 	limitText: 'Campo limitado a %n caractere%s.'
+});</pre>
+
+		<label>The limiter will display the text in French<br />
+		<input type="text" id="text2_1" size="50" /></label><br />
+
+<strong>Code:</strong><br />
+<pre>$('#text2_1').inputlimiter({
+	limit: 50,
+	remText: '%n caract&egrave;re%s restants.',
+	limitText: 'Champ limit&eacute; &agrave; %n caract&egrave;re%s.',
+	zeroPlural: false
 });</pre>
 
 	</fieldset>

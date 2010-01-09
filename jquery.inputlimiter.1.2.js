@@ -1,5 +1,5 @@
 /*
- * jQuery Input Limiter plugin 1.1.1
+ * jQuery Input Limiter plugin 1.2
  * http://rustyjeans.com/jquery-plugins/input-limiter/
  *
  * Copyright (c) 2009 Russel Fones <russel@rustyjeans.com>
@@ -92,15 +92,18 @@
 
 	$.fn.inputlimiter.remtextfilter = function(opts, charsRemaining) {
 		var remText = opts.remText;
+		if ( charsRemaining == 0 && opts.remFullText != null ) {
+			remText = opts.remFullText;
+		}
 		remText = remText.replace(/\%n/g, charsRemaining);
-		remText = remText.replace(/\%s/g, ( charsRemaining == 1?'':'s' ));
+		remText = remText.replace(/\%s/g, ( opts.zeroPlural ? ( charsRemaining == 1?'':'s' ) : ( charsRemaining <= 1?'':'s' ) ) );
 		return remText;
 	};
 
 	$.fn.inputlimiter.limittextfilter = function(opts) {
 		var limitText = opts.limitText;
 		limitText = limitText.replace(/\%n/g, opts.limit);
-		limitText = limitText.replace(/\%s/g, ( opts.limit == 1?'':'s' ));
+		limitText = limitText.replace(/\%s/g, ( opts.limit <= 1?'':'s' ));
 		return limitText;
 	};
 
@@ -112,9 +115,11 @@
 		remText: '%n character%s remaining.',
 		remTextFilter: $.fn.inputlimiter.remtextfilter,
 		remTextHideOnBlur: true,
+		remFullText: null,
 		limitTextShow: true,
 		limitText: 'Field limited to %n character%s.',
-		limitTextFilter: $.fn.inputlimiter.limittextfilter
+		limitTextFilter: $.fn.inputlimiter.limittextfilter,
+		zeroPlural: true
 	};
 
 })(jQuery);
