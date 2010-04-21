@@ -1,5 +1,5 @@
 /*
- * jQuery Input Limiter plugin 1.2
+ * jQuery Input Limiter plugin 1.2.1
  * http://rustyjeans.com/jquery-plugins/input-limiter/
  *
  * Copyright (c) 2009 Russel Fones <russel@rustyjeans.com>
