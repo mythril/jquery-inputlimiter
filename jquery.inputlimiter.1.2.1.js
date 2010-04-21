@@ -37,6 +37,7 @@
 				$('#'+opts.boxId).bgiframe();
 		}
 		$(this).each(function(i){
+			$(this).unbind();
 			$(this).keyup(function(e){
 				if ( $(this).val().length > opts.limit )
 					$(this).val($(this).val().substring(0,opts.limit));
