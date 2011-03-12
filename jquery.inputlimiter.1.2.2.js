@@ -26,91 +26,81 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-(function($) {
-	$.fn.inputlimiter = function(options) {
+(function ($) {
+	$.fn.inputlimiter = function (options) {
 		var opts = $.extend({}, $.fn.inputlimiter.defaults, options);
-		if ( opts.boxAttach && !$('#'+opts.boxId).length )
-		{
+		if (opts.boxAttach && !$('#' + opts.boxId).length) {
 			$('<div/>').appendTo("body").attr({id: opts.boxId, 'class': opts.boxClass}).css({'position': 'absolute'}).hide();
 			// apply bgiframe if available
-			if ( $.fn.bgiframe )
-				$('#'+opts.boxId).bgiframe();
+			if ($.fn.bgiframe) {
+				$('#' + opts.boxId).bgiframe();
+			}
 		}
-		$(this).each(function(i){
+		$(this).each(function (i) {
 			$(this).unbind();
-			$(this).keyup(function(e){
-				if ( !opts.allowExceed && $(this).val().length > opts.limit )
-				{
-					$(this).val($(this).val().substring(0,opts.limit));
+			$(this).keyup(function (e) {
+				if (!opts.allowExceed && $(this).val().length > opts.limit) {
+					$(this).val($(this).val().substring(0, opts.limit));
 				}
-				if ( opts.boxAttach )
-				{
-					$('#'+opts.boxId).css({
-						'width': $(this).outerWidth() - ($('#'+opts.boxId).outerWidth() - $('#'+opts.boxId).width()) + 'px',
+				if (opts.boxAttach) {
+					$('#' + opts.boxId).css({
+						'width': $(this).outerWidth() - ($('#' + opts.boxId).outerWidth() - $('#' + opts.boxId).width()) + 'px',
 						'left': $(this).offset().left + 'px',
 						'top': ($(this).offset().top + $(this).outerHeight()) - 1 + 'px',
 						'z-index': 2000
 					});
 				}
-				var charsRemaining = opts.limit - $(this).val().length;
+				var charsRemaining = opts.limit - $(this).val().length,
+				    remText = opts.remTextFilter(opts, charsRemaining),
+				    limitText = opts.limitTextFilter(opts);
 
-				var remText = opts.remTextFilter(opts, charsRemaining);
-				var limitText = opts.limitTextFilter(opts);
-
-				if ( opts.limitTextShow )
-				{
-					$('#'+opts.boxId).html(remText + ' ' + limitText);
+				if (opts.limitTextShow) {
+					$('#' + opts.boxId).html(remText + ' ' + limitText);
 					// Check to see if the text is wrapping in the box
 					// If it is lets break it between the remaining test and the limit test
 					var textWidth = $("<span/>").appendTo("body").attr({id: '19cc9195583bfae1fad88e19d443be7a', 'class': opts.boxClass}).html(remText + ' ' + limitText).innerWidth();
 					$("#19cc9195583bfae1fad88e19d443be7a").remove();
-					if ( textWidth > $('#'+opts.boxId).innerWidth() ) {
-						$('#'+opts.boxId).html(remText + '<br />' + limitText);
+					if (textWidth > $('#' + opts.boxId).innerWidth()) {
+						$('#' + opts.boxId).html(remText + '<br />' + limitText);
 					}
 					// Show the limiter box
-					$('#'+opts.boxId).show();
-				}
-				else
-				{
-					$('#'+opts.boxId).html(remText).show();
+					$('#' + opts.boxId).show();
+				} else {
+					$('#' + opts.boxId).html(remText).show();
 				}
 			});
-			$(this).keypress(function(e){
-				if ( !opts.allowExceed && (!e.keyCode || (e.keyCode > 46 && e.keyCode < 90) || e.keyCode == 13) && $(this).val().length >= opts.limit )
-				{
+			$(this).keypress(function (e) {
+				if (!opts.allowExceed && (!e.keyCode || (e.keyCode > 46 && e.keyCode < 90) || e.keyCode === 13) && $(this).val().length >= opts.limit) {
 					return false;
 				}
 			});
-			$(this).blur(function(){
-				if ( opts.boxAttach )
-				{
-					$('#'+opts.boxId).fadeOut('fast');
-				}
-				else if ( opts.remTextHideOnBlur )
-				{
+			$(this).blur(function () {
+				if (opts.boxAttach) {
+					$('#' + opts.boxId).fadeOut('fast');
+				} else if (opts.remTextHideOnBlur) {
 					var limitText = opts.limitText;
 					limitText = limitText.replace(/\%n/g, opts.limit);
-					limitText = limitText.replace(/\%s/g, ( opts.limit == 1?'':'s' ));
-					$('#'+opts.boxId).html(limitText);
+					limitText = limitText.replace(/\%s/g, (opts.limit === 1 ? '' : 's'));
+					$('#' + opts.boxId).html(limitText);
 				}
 			});
 		});
 	};
 
-	$.fn.inputlimiter.remtextfilter = function(opts, charsRemaining) {
+	$.fn.inputlimiter.remtextfilter = function (opts, charsRemaining) {
 		var remText = opts.remText;
-		if ( charsRemaining == 0 && opts.remFullText != null ) {
+		if (charsRemaining === 0 && opts.remFullText !== null) {
 			remText = opts.remFullText;
 		}
 		remText = remText.replace(/\%n/g, charsRemaining);
-		remText = remText.replace(/\%s/g, ( opts.zeroPlural ? ( charsRemaining == 1?'':'s' ) : ( charsRemaining <= 1?'':'s' ) ) );
+		remText = remText.replace(/\%s/g, (opts.zeroPlural ? (charsRemaining === 1 ? '' : 's') : (charsRemaining <= 1 ? '' : 's')));
 		return remText;
 	};
 
-	$.fn.inputlimiter.limittextfilter = function(opts) {
+	$.fn.inputlimiter.limittextfilter = function (opts) {
 		var limitText = opts.limitText;
 		limitText = limitText.replace(/\%n/g, opts.limit);
-		limitText = limitText.replace(/\%s/g, ( opts.limit <= 1?'':'s' ));
+		limitText = limitText.replace(/\%s/g, (opts.limit <= 1 ? '' : 's'));
 		return limitText;
 	};
 
