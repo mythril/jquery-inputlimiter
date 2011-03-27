@@ -67,15 +67,15 @@
 			} else {
 				$('#' + opts.boxId).html(remText).show();
 			}
-		}
+		},
 
-		var inputlimiterKeypress = function (e) {
+		inputlimiterKeypress = function (e) {
 			if (!opts.allowExceed && (!e.keyCode || (e.keyCode > 46 && e.keyCode < 90) || e.keyCode === 13) && $(this).val().length >= opts.limit) {
 				return false;
 			}
-		}
+		},
 
-		var inputlimiterBlur = function () {
+		inputlimiterBlur = function () {
 			if (opts.boxAttach) {
 				$('#' + opts.boxId).fadeOut('fast');
 			} else if (opts.remTextHideOnBlur) {
