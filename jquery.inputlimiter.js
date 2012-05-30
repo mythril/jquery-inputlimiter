@@ -1,5 +1,5 @@
 /*
- * jQuery Input Limiter plugin 1.2.2
+ * jQuery Input Limiter plugin 1.3
  * http://rustyjeans.com/jquery-plugins/input-limiter/
  *
  * Copyright (c) 2009 Russel Fones <russel@rustyjeans.com>
@@ -28,7 +28,8 @@
 
 (function ($) {
 	$.fn.inputlimiter = function (options) {
-		var opts = $.extend({}, $.fn.inputlimiter.defaults, options);
+		var opts = $.extend({}, $.fn.inputlimiter.defaults, options),
+			$elements = $(this);
 		if (opts.boxAttach && !$('#' + opts.boxId).length) {
 			$('<div/>').appendTo("body").attr({id: opts.boxId, 'class': opts.boxClass}).css({'position': 'absolute'}).hide();
 			// apply bgiframe if available
@@ -38,20 +39,22 @@
 		}
 
 		var inputlimiterKeyup = function (e) {
-			if (!opts.allowExceed && $(this).val().length > opts.limit) {
-				$(this).val($(this).val().substring(0, opts.limit));
+			var $this = $(this),
+				count = counter($this.val());
+			if (!opts.allowExceed && count > opts.limit) {
+				$this.val(truncater($this.val()));
 			}
 			if (opts.boxAttach) {
 				$('#' + opts.boxId).css({
-					'width': $(this).outerWidth() - ($('#' + opts.boxId).outerWidth() - $('#' + opts.boxId).width()) + 'px',
-					'left': $(this).offset().left + 'px',
-					'top': ($(this).offset().top + $(this).outerHeight()) - 1 + 'px',
+					'width': $this.outerWidth() - ($('#' + opts.boxId).outerWidth() - $('#' + opts.boxId).width()) + 'px',
+					'left': $this.offset().left + 'px',
+					'top': ($this.offset().top + $this.outerHeight()) - 1 + 'px',
 					'z-index': 2000
 				});
 			}
-			var charsRemaining = opts.limit - $(this).val().length,
-			    remText = opts.remTextFilter(opts, charsRemaining),
-			    limitText = opts.limitTextFilter(opts);
+			var charsRemaining = (opts.limit - count > 0 ? opts.limit - count : 0),
+				remText = opts.remTextFilter(opts, charsRemaining),
+				limitText = opts.limitTextFilter(opts);
 
 			if (opts.limitTextShow) {
 				$('#' + opts.boxId).html(remText + ' ' + limitText);
@@ -70,12 +73,21 @@
 		},
 
 		inputlimiterKeypress = function (e) {
-			if (!opts.allowExceed && (!e.keyCode || (e.keyCode > 46 && e.keyCode < 90) || e.keyCode === 13) && $(this).val().length >= opts.limit) {
-				return false;
+			var count = counter($(this).val());
+			if (!opts.allowExceed && count > opts.limit) {
+				var modifierKeyPressed = e.ctrlKey || e.altKey || e.metaKey;
+				if (!modifierKeyPressed && (e.which >= 32 && e.which <= 122) && this.selectionStart === this.selectionEnd) {
+					return false;
+				}
 			}
 		},
 
 		inputlimiterBlur = function () {
+			var $this = $(this);
+				count = counter($this.val());
+			if (!opts.allowExceed && count > opts.limit) {
+				$this.val(truncater($this.val()));
+			}
 			if (opts.boxAttach) {
 				$('#' + opts.boxId).fadeOut('fast');
 			} else if (opts.remTextHideOnBlur) {
@@ -84,15 +96,37 @@
 				limitText = limitText.replace(/\%s/g, (opts.limit === 1 ? '' : 's'));
 				$('#' + opts.boxId).html(limitText);
 			}
-		}
+		},
+
+		counter = function (value) {
+			if (opts.limitBy.toLowerCase() === "words") {
+				return (value.length > 0 ? $.trim(value).replace(/\ +(?= )/g, '').split(' ').length : 0);
+			}
+			return value.length;
+		},
+
+		truncater = function (value) {
+			if (opts.limitBy.toLowerCase() === "words") {
+				return $.trim(value).replace(/\ +(?= )/g, '').split(' ').splice(0, opts.limit).join(' ') + ' ';
+			}
+			return value.substring(0, opts.limit);
+		};
 
 		$(this).each(function (i) {
-			$(this).bind('keyup', inputlimiterKeyup);
-			$(this).bind('keypress', inputlimiterKeypress);
-			$(this).bind('blur', inputlimiterBlur);
+			var $this = $(this);
+			if ((!options || !options.limit) && opts.useMaxlength && parseInt($this.attr('maxlength')) > 0 && parseInt($this.attr('maxlength')) != opts.limit) {
+				$this.inputlimiter($.extend({}, opts, { limit: parseInt($this.attr('maxlength')) }));
+			} else {
+				if (!opts.allowExceed && opts.useMaxlength && opts.limitBy.toLowerCase() === "characters") {
+					$this.attr('maxlength', opts.limit);
+				}
+				$this.unbind('.inputlimiter');
+				$this.bind('keyup.inputlimiter', inputlimiterKeyup);
+				$this.bind('keypress.inputlimiter', inputlimiterKeypress);
+				$this.bind('blur.inputlimiter', inputlimiterBlur);
+			}
 		});
 	};
-
 
 	$.fn.inputlimiter.remtextfilter = function (opts, charsRemaining) {
 		var remText = opts.remText;
@@ -124,7 +158,9 @@
 		limitText: 'Field limited to %n character%s.',
 		limitTextFilter: $.fn.inputlimiter.limittextfilter,
 		zeroPlural: true,
-		allowExceed: false
+		allowExceed: false,
+		useMaxlength: true,
+		limitBy: 'characters'
 	};
 
 })(jQuery);

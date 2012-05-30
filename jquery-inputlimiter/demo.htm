@@ -4,8 +4,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Input Limiter Demo</title>
 	<link rel="stylesheet" type="text/css" href="jquery.inputlimiter.1.0.css" />
-	<script type="text/javascript" src="jquery-1.5.1.min.js"></script>
-	<script type="text/javascript" src="jquery.inputlimiter.1.2.3.min.js"></script>
+	<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="jquery.inputlimiter.1.3.min.js"></script>
 	<style type="text/css">
 		body {
 			font-family: verdana;
@@ -19,6 +19,14 @@
 		$(document).ready(function() {
 			// Default
 			$('textarea').inputlimiter();
+
+			// Limit by Words
+			$('#textarea3').inputlimiter({
+				limit: 10,
+				limitBy: 'words',
+				remText: 'You only have %n word%s remaining...',
+				limitText: 'Field limited to %n word%s.'
+			});
 			
 			// Make it more personal
 			$('#text1').inputlimiter({
@@ -116,6 +124,22 @@
 <pre>$('textarea').inputlimiter();</pre>
 
 	</fieldset>
+
+	<fieldset>
+		<legend>Limit by Words</legend>
+		<label>This textarea only allows ten words<br />
+		<textarea rows="3" cols="30" id="textarea3"></textarea></label><br />
+
+<strong>Code:</strong><br />
+<pre>$('#textarea3').inputlimiter({
+	limit: 10,
+	limitBy: 'words',
+	remText: 'You only have %n word%s remaining...',
+	limitText: 'Field limited to %n word%s.'
+});</pre>
+
+	</fieldset>	
+	
 	<fieldset>
 		<legend>Custom limiter text</legend>
 		<label>Make it more personal<br />
