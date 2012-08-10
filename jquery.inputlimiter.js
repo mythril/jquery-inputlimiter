@@ -1,5 +1,5 @@
 /*
- * jQuery Input Limiter plugin 1.3
+ * jQuery Input Limiter plugin 1.3.1
  * http://rustyjeans.com/jquery-plugins/input-limiter/
  *
  * Copyright (c) 2009 Russel Fones <russel@rustyjeans.com>
@@ -102,7 +102,12 @@
 			if (opts.limitBy.toLowerCase() === "words") {
 				return (value.length > 0 ? $.trim(value).replace(/\ +(?= )/g, '').split(' ').length : 0);
 			}
-			return value.length;
+			var count = value.length,
+				newlines = value.match(/\n/g);
+			if (newlines && opts.lineReturnCount > 1) {
+				count += newlines.length * (opts.lineReturnCount - 1);
+			}
+			return count;
 		},
 
 		truncater = function (value) {
@@ -160,7 +165,8 @@
 		zeroPlural: true,
 		allowExceed: false,
 		useMaxlength: true,
-		limitBy: 'characters'
+		limitBy: 'characters',
+		lineReturnCount: 1
 	};
 
 })(jQuery);
