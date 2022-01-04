@@ -100,7 +100,7 @@
 
 		counter = function (value) {
 			if (opts.limitBy.toLowerCase() === "words") {
-				return (value.length > 0 ? $.trim(value).replace(/\ +(?= )/g, '').split(' ').length : 0);
+				return (value.length > 0 ? $.trim(value).replace(/\s+(?= )/g, '').split(/[\n, ]+/).length : 0);
 			}
 			var count = value.length,
 				newlines = value.match(/\n/g);
@@ -112,7 +112,17 @@
 
 		truncater = function (value) {
 			if (opts.limitBy.toLowerCase() === "words") {
-				return $.trim(value).replace(/\ +(?= )/g, '').split(' ').splice(0, opts.limit).join(' ') + ' ';
+				var value = $.trim(value);
+				var count = value.replace(/\s+(?= )/g, '').split(/[\n, ]+/).length;
+				do {
+					var lastIndexSpace   = value.lastIndexOf(" ");
+					var lastIndexNewLine = value.lastIndexOf("\n");
+					var lastIndex        = Math.max( lastIndexSpace, lastIndexNewLine );
+					value = value.substring(0, lastIndex);
+					count = value.replace(/\s+(?= )/g, '').split(/[\n, ]+/).length;
+				} while ( count > opts.limit )
+				return value;
+
 			}
 			return value.substring(0, opts.limit);
 		};
